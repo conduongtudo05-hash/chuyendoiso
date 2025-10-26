@@ -115,6 +115,7 @@ a{color:inherit;text-decoration:none} a:hover{color:#dc2626}
 #toTop{position:fixed;right:20px;bottom:56px;z-index:120;border:none;width:34px;height:44px;border-radius:5px; font-size: 24px; font-weight: 700;
   display:flex;align-items:center;justify-content:center;background:#c00404;color:#FFD700;box-shadow:0 8px 20px rgba(185,28,28,.25);cursor:pointer}
 /* responsive */
+
 @media (max-width:1024px){
   .today-top{grid-template-columns:1fr}
   .grid-2{grid-template-columns:1fr}
@@ -525,7 +526,7 @@ function classForSummary(text){
 (function(){
   const drawer   = document.getElementById('mDrawer');
   const backdrop = document.querySelector('.m-backdrop');
-  const openBtn  = document.querySelector('.m-toggle');     // nút 3 gạch trong header
+  const openBtn  = document.querySelector('.m-toggle');
   const closeBtn = drawer?.querySelector('.m-close');
 
   const focusables = 'a,button,[tabindex]:not([tabindex="-1"])';
@@ -534,14 +535,15 @@ function classForSummary(text){
   function open(){
     lastFocus = document.activeElement;
     document.body.classList.add('menu-open','no-scroll');
-    drawer?.setAttribute('aria-hidden','false');
-    backdrop?.hidden = false;
-    (drawer?.querySelector(focusables))?.focus();
+    if (drawer)   drawer.setAttribute('aria-hidden','false');
+    if (backdrop) backdrop.hidden = false;                 // ✅ if-guard thay vì ?.
+    drawer?.querySelector(focusables)?.focus?.();          // gọi hàm thì dùng ?. được
   }
+
   function close(){
     document.body.classList.remove('menu-open','no-scroll');
-    drawer?.setAttribute('aria-hidden','true');
-    backdrop?.hidden = true;
+    if (drawer)   drawer.setAttribute('aria-hidden','true');
+    if (backdrop) backdrop.hidden = true;                  // ✅
     lastFocus?.focus?.();
   }
 
@@ -550,7 +552,6 @@ function classForSummary(text){
   backdrop?.addEventListener('click', close);
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
 
-  // Accordion: event delegation cho tất cả .m-drop
   drawer?.addEventListener('click', e=>{
     const btn = e.target.closest('.m-drop');
     if(!btn) return;
@@ -562,12 +563,12 @@ function classForSummary(text){
     panel.hidden = expanded;
   });
 
-  // Đóng khi bấm link trong menu
   drawer?.addEventListener('click', e=>{
     const a = e.target.closest('a');
     if(a) close();
   });
 })();
+
 </script>
 </body>
 </html>
