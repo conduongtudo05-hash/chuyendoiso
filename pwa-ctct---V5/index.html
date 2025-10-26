@@ -91,8 +91,6 @@
     .pro-footer a:hover{ text-decoration:underline; }
     .pro-footer .legal{ border-top:1px dashed rgba(255,255,255,.18); margin-top:8px; padding-top:10px; font-size:14px; text-align:center; color:#EDE0A0;}
     /* ===== NAV auth (đẹp – gọn) ===== */
-    .nav__search .search__input{border-radius: 999px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); color: #fff; padding: 10px 14px;}
-    .nav__search .search__btn{border-radius: 999px; background: #FFD966; color:#111; font-weight:700; padding:10px 14px;}
     .btn-auth{border-radius:999px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); color:#fff; padding:8px 14px; font-weight:700; transition:.2s; backdrop-filter:blur(8px);}
     .btn-auth:hover{ background:rgba(255,255,255,.18); }
     .btn-auth--primary{background:linear-gradient(180deg,#FFE68A,#FFD04D); color:#111; border:none; box-shadow:0 6px 20px rgba(0,0,0,.18);}
@@ -111,6 +109,7 @@
       .grid{grid-template-columns:1fr}
       .pro-footer .f-grid{grid-template-columns:1fr}}
       .hero-media{ display: none !important; }
+      #userChip { display: none !important; }
 
   </style>
 
@@ -170,13 +169,6 @@
           </div>
         </div>
       </nav>
-
-      <!-- Search -->
-      <form id="globalSearch" class="nav__search hide-sm" role="search" aria-label="Tìm kiếm">
-        <input class="search__input" type="search" name="q" placeholder="Tìm tài liệu, chủ đề…" autocomplete="off">
-        <button class="search__btn" type="submit">Tìm kiếm</button>
-      </form>
-
       <!-- Auth actions (desktop) -->
        <div id="userChip" class="user-chip" hidden></div>
         <div class="nav__actions hide-sm">
@@ -315,7 +307,6 @@
   <script src="js/net.js" defer></script>
   <script src="js/analytics.js" defer></script>
   <script src="js/navbar.js" defer></script>
-  <script src="js/search.js" defer></script>
   <script src="js/news.js" defer></script>
   <script src="js/ai.js" defer></script>
   <script src="js/app.js" defer></script>
