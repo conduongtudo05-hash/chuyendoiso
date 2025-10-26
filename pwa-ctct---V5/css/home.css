@@ -175,3 +175,45 @@
 }
   .home .hero h1.soft-gold-v5.sg-compact{ line-height: 1.12; padding-top: 10px; }
 }
+/* ===== NAV: chỉ đổi trên MOBILE, desktop giữ nguyên từ nav.css ===== */
+@media (max-width:1024px){
+  /* KHÔNG sticky trên mobile */
+  header.nav{ padding-top: 24px; padding-bottom: 12px; position: static !important; top:auto !important; }
+
+  /* Ẩn menu chữ trên mobile */
+  header.nav .nav__links,
+  header.nav .nav__search,
+  header.nav .nav__actions { display: none !important; }
+
+  /* Nút ba gạch sang sát mép phải */
+  header.nav .nav__inner{ display:flex; align-items:center; min-height: 64px;  gap:10px; }
+  header.nav .nav__toggle{ margin-left:auto; order:3; }
+}
+
+/* ===== HERO badge: ép 1 dòng + gọn trên mobile ===== */
+.hero-badge{
+  white-space: nowrap;
+  font-size: clamp(12px, 3.6vw, 14px);
+  padding: 6px 12px;
+}
+
+/* (tuỳ chọn) brand co chữ trên màn nhỏ */
+header.nav .brand{ font-size: clamp(16px, 4.2vw, 20px); }
+
+/* Desktop: bỏ dính + hạ menu xuống một chút */
+@media (min-width:1025px){
+  header.nav,
+  header.nav.nav-dark{
+    position: static !important;   /* không dính khi cuộn */
+    top: auto !important;
+    margin-top: 12px;              /* >>> đẩy cả thanh nav xuống khỏi mép trên */
+    padding: 12px 0;               /* dày dặn hơn */
+  }
+  header.nav .nav__inner{
+    align-items: center;
+    min-height: 64px;              /* chiều cao ổn cho desktop */
+  }
+
+  /* đề phòng file nav.css cộng padding-top cho body khi sticky */
+  body{ padding-top: 0 !important; }
+}
