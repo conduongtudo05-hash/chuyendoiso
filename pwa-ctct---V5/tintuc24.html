@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PTKV3 • Tin tức</title>
+<link rel="stylesheet" href="css/nav.css?v=20251006">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f8fb;--card:#fff;--text:#0f172a;--muted:#6b7280;--border:#e5e7eb;
+  --accent:#b91c1c;--accent-2:#FFD966;--accent-dark:#991b1b;
+  /* Anh có thể đổi cỡ chữ phần “Đọc nhiều” ở đây (14px/15px/16px…) */
+  --hot-font-size:16px;
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+a{color:inherit;text-decoration:none} a:hover{color:#dc2626}
+
+/* ===== Header / Footer gọn nhẹ ===== */
+.header{position:sticky;top:0;z-index:50; font-weight: 600;  background:linear-gradient(90deg,#7f1d1d,#b91c1c 45%,#dc2626);color:#fff}
+.nav{max-width:1200px;margin:auto;display:flex;gap:18px;align-items:center;padding:12px 16px;}
+.nav .brand{font-weight:800}
+.nav a{color:#fff;padding:6px 10px;border-radius:8px;}
+.nav a[aria-current="page"]{background:rgba(0,0,0,.18);}
+.nav a:hover{color:var(--accent-2); transform:scale(1.06);}
+.footer{margin-top:40px;background:#111827;color:#cbd5e1}
+.footer .wrap{max-width:1200px;margin:auto;padding:20px 16px;font-size:14px}
+
+/* ===== Common ===== */
+.container{max-width:1200px;margin:22px auto;padding:0 16px}
+.section{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:22px}
+.section h2{margin:4px 0 16px;font-size:20px;font-weight:800;display:flex;gap:10px;align-items:center}
+.badge{border:1px solid #d1d5db;border-radius:999px;font-size:12px;padding:2px 8px;background:#fff;color:#374151}
+.muted{color:var(--muted)} .hide{display:none}
+.skeleton{background:linear-gradient(90deg,#eee,#f6f6f6 30%,#eee);background-size:200% 100%;animation:sh 1.2s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+
+/* ===== TODAY ===== */
+.today-top{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}
+.today-top .img{height:360px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#fff}
+.today-top .img img{width:100%;height:100%;object-fit:cover;display:block}
+.today-top .txt{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fff;
+  display:flex;flex-direction:column;justify-content:flex-start;gap:8px}
+.today-top .title{font-size:26px;line-height:1.25;font-weight:800;}
+.today-top .desc{color:#374151; line-height:1.6}
+.strip{display:flex;gap:12px;overflow-x:auto;padding:10px 2px;scroll-snap-type:x mandatory}
+.strip::-webkit-scrollbar{height:8px}.strip::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:8px}
+.card-sm{min-width:260px;max-width:260px;scroll-snap-align:start;border:1px solid var(--border);border-radius:12px;background:#fff;overflow:hidden}
+.card-sm img{width:100%;height:140px;object-fit:cover;display:block}
+.card-sm .pad{padding:10px} .card-sm h4{margin:0 0 6px;font-size:15px;line-height:1.35}
+/* ĐỪNG justify cho title */
+.today-top .title,
+.p-title,
+.tile h4,
+.pl-item h4 {
+  text-align: left;
+  text-wrap: balance;       /* chia dòng đẹp hơn cho tiêu đề */
+  letter-spacing: normal;
+  word-spacing: normal;
+}
+/* ===== POLITICS ===== */
+.grid-2{display:grid;grid-template-columns:1.7fr 1fr;gap:18px}
+.p-feature{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+.p-feature .hero{width:100%;height:420px;object-fit:cover;display:block}
+.p-feature .pad{padding:14px;border-top:1px solid var(--border)}
+.p-feature .title{font-size:26px;font-weight:800;line-height:1.22;margin:6px 0;}
+.p-feature .desc{color:#374151; line-height:1.6}
+.sidebar{max-height: 700px;border:1px solid var(--border);border-radius:12px;background:#fff;overflow:auto}
+.sidebar .head{position:sticky;top:0;padding:10px 14px;border-bottom:1px solid var(--border);font-weight:800;color:var(--accent);background:#fff}
+.hot{list-style:none;margin:0;padding:0; font-size: 18px;}
+.hot li{padding:12px 14px;border-bottom:1px dashed var(--border)} .hot li:last-child{border-bottom:none}
+
+/* ===== POLICY ===== */
+.policy-grid{
+  display:grid; gap:18px;
+  grid-template-columns: 1.15fr 1.25fr 1.15fr;
+  grid-template-areas:
+    "pimg pdetail phot"
+    "pmid pmid   phot";
+}
+.card {background:#fff; border:1px solid var(--border); border-radius:16px; box-shadow:0 4px 20px rgba(17,24,39,.04)}
+/* left image */
+.p-img{grid-area:pimg}
+.p-hero{position:relative; overflow:hidden}
+.p-hero img{width:100%;height:280px;object-fit:cover;display:block}
+.p-hero .ribbon{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.92);color:#111827;font-weight:700;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid #e5e7eb}
+/* middle */
+.p-detail{grid-area:pdetail; padding:14px 16px}
+.p-title{font-size:24px;font-weight:800;line-height:1.28;margin:0;}
+.p-desc{color:#374151;font-size:15px;line-height:1.65;margin-top:8px;}
+.p-meta{color:#6b7280;font-size:12px;margin-top:10px;}
+/* right hot */
+.p-hot{grid-area:phot}
+.hot-card{position:sticky;top:10px;height:100%;display:flex;flex-direction:column}
+.hot-head{padding:12px 16px;font-weight:800;color:#b91c1c;border-bottom:1px solid var(--border);border-radius:16px 16px 0 0}
+.hot-list{display:flex;flex-direction:column;gap:12px;padding:12px 10px;height:100%;justify-content:space-between}
+.hot-item{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:flex-start}
+.hot-num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#fef2f2;color:#b91c1c;font-weight:800;border:1px solid #fde1e1; font-size: 20px;}
+.hot-title{font-weight:500;line-height:1.55;font-size:var(--hot-font-size);}
+/* 3 tiles under hero (span two cols) */
+.p-mid{grid-area:pmid;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tile{overflow:hidden; text-align: justify;}
+.tile img{width:100%;height:150px;object-fit:cover;display:block;transition:transform .35s}
+.tile:hover img{transform:scale(1.03)}
+.tile .pad{padding:10px 12px}
+.tile h4{margin:0;font-size:15px;line-height:1.35;}
+/* list 2 columns */
+.policy-list{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.pl-item{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:12px}
+.pl-item img{width:180px;height:120px;object-fit:cover;border-radius:10px; text-align: justify;}
+.pl-item h4{margin:0 0 6px;font-size:16px;line-height:1.38;}
+.pl-item .desc{color:#374151;line-height:1.6;}
+/* back to top */
+#toTop{position:fixed;right:20px;bottom:56px;z-index:120;border:none;width:34px;height:44px;border-radius:5px; font-size: 24px; font-weight: 700;
+  display:flex;align-items:center;justify-content:center;background:#c00404;color:#FFD700;box-shadow:0 8px 20px rgba(185,28,28,.25);cursor:pointer}
+/* responsive */
+@media (max-width:1024px){
+  .today-top{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  .policy-grid{grid-template-columns:1fr;gap:14px;grid-template-areas:"pimg" "pdetail" "phot" "pmid"}
+  .policy-list{grid-template-columns:1fr}
+  .pl-item{grid-template-columns:1fr}
+  .pl-item img{width:100%;height:190px}
+}
+/* Dùng cho đoạn mô tả/tóm tắt */
+.justify {
+  text-align: justify;
+  text-justify: inter-word; /* giãn theo từ, không giãn theo ký tự */
+  hyphens: auto;            /* cho phép ngắt từ (khi có hỗ trợ) */
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: 1.6;
+  text-wrap: pretty;        /* trình duyệt mới: căn đều dễ chịu hơn */
+}
+/* Nếu đoạn ngắn thì… đừng justify */
+.short {
+  text-align: left;
+}
+/* Chỉ áp cho thẻ nhỏ/card để tránh cột quá rộng */
+.tile .pad,
+.pl-item .desc,
+.p-desc {
+  max-width: 62ch; /* ~62 ký tự/line => dễ đọc, ít bị giãn khoảng trắng */
+}
+</style>
+</head>
+<body>
+
+<!-- ====== HEADER ====== -->
+ <header class="header">
+  <nav class="nav">
+    <a class="brand" href="index.html">BỘ CHQS TỈNH BẮC NINH</a>
+    <a href="index.html">Trang chủ</a>
+    <a href="#" aria-current="page" style="background:rgba(31, 28, 28, 0.18)">Tin tức</a>
+    <a href="Hoctap.html">Học tập</a>
+    <div class="nav__item has-dropdown">
+          <a>Làm bài kiểm tra ▾</a>
+          <div class="dropdown">
+            <a href="exam.html">Kiểm tra nhận thức</a>
+            <a href="practice.html">Ôn trắc nghiệm</a>
+            <a href="quiz.html">Thi thử</a>
+          </div>
+        </div>
+    <div class="sp"></div>
+  </nav>
+</header>
+
+<div class="container">
+
+  <!-- 1) TIN TRONG NGÀY -->
+  <section class="section" id="today">
+    <h2>🔥 TIN TRONG NGÀY <span class="badge">VnExpress</span></h2>
+    <div class="today-top" id="today-top">
+      <div class="img skeleton"><img alt=""></div>
+      <div class="txt skeleton"></div>
+    </div>
+    <div id="today-strip" class="strip"></div>
+  </section>
+
+  <!-- 2) TIN CHÍNH TRỊ -->
+  <section class="section" id="politics">
+    <h2>🏛️ TIN CHÍNH TRỊ <span class="badge">ĐCSVN</span></h2>
+    <div class="grid-2">
+      <article class="p-feature skeleton" id="politics-feature"></article>
+      <aside class="sidebar">
+        <div class="head">★ TIN NỔI BẬT</div>
+        <ul id="politics-hot" class="hot"></ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 3) CHÍNH SÁCH MỚI -->
+  <section class="section" id="policy">
+    <h2>⚖️ CHÍNH SÁCH MỚI <span class="badge">Chinhphu.vn</span></h2>
+    <div class="policy-grid">
+      <div class="p-img card">
+        <div class="p-hero">
+            <img id="policy-img" class="skeleton" alt="">
+            <a id="policy-img-link" class="block-link" href="#" target="_blank" rel="noopener"></a>
+            </div>
+        </div>
+      <div class="p-detail card">
+        <a id="policy-detail-link" class="block-link" href="#" target="_blank" rel="noopener"></a>
+        <h3 id="policy-title" class="p-title clamp-2 justify"></h3>
+        <div id="policy-desc" class="p-desc clamp-3 justify"></div>
+        <div id="policy-meta" class="p-meta"></div>
+        </div>
+      <aside class="p-hot">
+        <div class="card hot-card">
+          <div class="hot-head">ĐỌC NHIỀU</div>
+          <div id="policy-hot" class="hot-list"></div>
+        </div>
+      </aside>
+      <div id="policy-mid" class="p-mid"></div>
+    </div>
+
+    <div id="policy-list" class="policy-list"></div>
+    <div class="actions">
+      <button id="btn-more" class="btn">Xem thêm</button>
+    </div>
+  </section>
+</div>
+
+<!-- back to top -->
+<button id="toTop" title="Lên trên" aria-label="Lên trên">▲</button>
+
+<!-- ====== FOOTER ====== -->
+<footer class="footer">
+  <div class="wrap">
+    <strong>PTKV3 • Trung tâm Giáo dục Chính trị số © 2025</strong>
+  </div>
+</footer>
+<script src="js/navbar.js" defer></script>
+<script>
+/* ====== CONFIG ====== */
+const API_BASE = 'https://script.google.com/macros/s/AKfycby0KuUYLsVLMVjk0XXMzE4j44XixzhXSp_YWKme15CzNYSUsTO5MUoIv5FdCxWM1KvSOQ/exec';
+const FALLBACK = 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1200&auto=format&fit=crop';
+
+function jsonp(url){
+  return new Promise((resolve,reject)=>{
+    const cb='cb'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    s.src=url+(url.includes('?')?'&':'?')+'callback='+cb;
+    s.async=true;
+    window[cb]=d=>{resolve(d);cleanup()};
+    s.onerror=()=>{reject(new Error('JSONP error'));cleanup()};
+    function cleanup(){delete window[cb];s.remove()}
+    document.body.appendChild(s);
+  });
+}
+const trim=(t,n)=>!t?'':(t.length<=n?t:t.slice(0,n).replace(/\s+\S*$/,'')+'…');
+
+/* ===== TODAY ===== */
+let todayItems=[], todayIdx=0;
+function renderTodayTop(it){
+  const top=document.getElementById('today-top');
+  // ảnh & tiêu đề là các LINK riêng — không có overlay toàn khối
+  top.querySelector('.img').classList.remove('skeleton');
+  top.querySelector('.img').innerHTML =
+    `<a href="${it.link}" target="_blank" rel="noopener">
+       <img src="${it.image||FALLBACK}" onerror="this.src='${FALLBACK}'" alt="">
+     </a>`;
+  top.querySelector('.txt').classList.remove('skeleton');
+  top.querySelector('.txt').innerHTML =
+    `<h3 class="title"><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></h3>
+     ${it.summary?`<div class="desc">${trim(it.summary,220)}</div>`:''}
+     <div class="muted">${new Date(it.ts||Date.now()).toLocaleString('vi-VN')} • vnexpress</div>`;
+}
+function todayStripHTML(arr){
+  return arr.slice(1,18).map(it=>`
+    <article class="card-sm">
+      <a href="${it.link}" target="_blank" rel="noopener">
+        <img src="${it.image||FALLBACK}" onerror="this.src='${FALLBACK}'" alt="">
+      </a>
+      <div class="pad">
+        <h4><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></h4>
+      </div>
+    </article>`).join('');
+}
+async function loadToday(){
+  const data = await jsonp(API_BASE+'?action=listNews&source=vnexpress');
+  const seen=new Set();
+  todayItems=(data.items||[])
+    .filter(x=>x.title&&x.link&&x.image)
+    .filter(x=>{const k=x.image.split('?')[0];if(seen.has(k))return false;seen.add(k);return true;});
+  if(!todayItems.length) return;
+  renderTodayTop(todayItems[0]);
+  document.getElementById('today-strip').innerHTML = todayStripHTML(todayItems);
+}
+setInterval(()=>{ if(!todayItems.length) return;
+  todayIdx=(todayIdx+1)%todayItems.length; renderTodayTop(todayItems[todayIdx]); },6000);
+
+/* ===== POLITICS ===== */
+let polItems=[], polIdx=0;
+function politicsFeatureHTML(it){
+  return `
+    <a href="${it.link}" target="_blank" rel="noopener">
+      <img class="hero" src="${it.image||FALLBACK}" onerror="this.src='${FALLBACK}'" alt="">
+    </a>
+    <div class="pad">
+      <h3 class="title"><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></h3>
+      ${it.summary?`<div class="desc">${trim(it.summary,260)}</div>`:''}
+      <div class="muted" style="margin-top:6px">${new Date(it.ts||Date.now()).toLocaleString('vi-VN')}</div>
+    </div>`;
+}
+function hotItem(it){return `<li><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></li>`}
+async function loadPolitics(){
+  const [a,b]=await Promise.all([
+    jsonp(API_BASE+'?action=listNews&source=dangcongsan.hoatdong'),
+    jsonp(API_BASE+'?action=listNews&source=dangcongsan.xaydung')
+  ]);
+  polItems=[...(a.items||[]),...(b.items||[])].filter(x=>x.title&&x.link).sort((x,y)=>new Date(y.ts)-new Date(x.ts));
+  const f=document.getElementById('politics-feature');
+  const h=document.getElementById('politics-hot');
+  f.classList.remove('skeleton');
+  if(!polItems.length){f.innerHTML='<div class="pad">Chưa có dữ liệu.</div>';h.innerHTML='';return;}
+  f.innerHTML=politicsFeatureHTML(polItems[0]);
+  h.innerHTML=polItems.slice(1,30).map(hotItem).join('');
+}
+setInterval(()=>{ if(!polItems.length) return;
+  polIdx=(polIdx+1)%polItems.length;
+  document.getElementById('politics-feature').innerHTML=politicsFeatureHTML(polItems[polIdx]); },6000);
+
+/* ===== POLICY ===== */
+let policyItems=[], policyIdx=0, policyOffset=0;
+function renderPolicyTop(it, hotItems){
+  const img=document.getElementById('policy-img'); const imgl=document.getElementById('policy-img-link');
+  const ttl=document.getElementById('policy-title'); const desc=document.getElementById('policy-desc');
+  const meta=document.getElementById('policy-meta'); const hot=document.getElementById('policy-hot');
+
+  imgl.href = it.link; img.classList.remove('skeleton');
+  img.src=it.image||FALLBACK; img.onerror=()=>img.src=FALLBACK;
+
+  ttl.innerHTML  = `<a href="${it.link}" target="_blank" rel="noopener">${it.title}</a>`;
+  desc.innerHTML = it.summary?it.summary:'';
+  meta.textContent = new Date(it.ts||Date.now()).toLocaleString('vi-VN');
+
+  hot.innerHTML = hotItems.map((x,i)=>`
+    <div class="hot-item">
+      <span class="hot-num">${i+1}</span>
+      <a class="hot-title" href="${x.link}" target="_blank" rel="noopener">${x.title}</a>
+    </div>`).join('');
+}
+function renderPolicyMid(arr){
+  const pick=arr.slice(1,4);
+  document.getElementById('policy-mid').innerHTML = pick.map(it=>`
+    <article class="tile card">
+      <a href="${it.link}" target="_blank" rel="noopener">
+        <img src="${it.image||FALLBACK}" onerror="this.src='${FALLBACK}'" alt="">
+      </a>
+      <div class="pad"><h4><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></h4></div>
+    </article>`).join('');
+}
+function renderPolicyList(){
+  const list=document.getElementById('policy-list');
+  const more=policyItems.slice(policyOffset, policyOffset+8);
+  policyOffset += more.length;
+  list.insertAdjacentHTML('beforeend', more.map(it=>`
+    <article class="pl-item card">
+      <a href="${it.link}" target="_blank" rel="noopener">
+        <img src="${it.image||FALLBACK}" onerror="this.src='${FALLBACK}'" alt="">
+      </a>
+      <div>
+        <h4><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></h4>
+        ${it.summary?`<div class="desc">${it.summary}</div>`:''}
+      </div>
+    </article>`).join(''));
+  if(policyOffset>=policyItems.length) document.getElementById('btn-more').classList.add('hide');
+}
+async function loadPolicy(){
+  const data=await jsonp(API_BASE+'?action=listNews&source=chinhphu');
+  policyItems=(data.items||[]).filter(x=>x.title&&x.link);
+  if(!policyItems.length) return;
+  renderPolicyTop(policyItems[0], policyItems.slice(1,6));
+  renderPolicyMid(policyItems);
+  renderPolicyList();
+}
+setInterval(()=>{ if(!policyItems.length) return;
+  policyIdx=(policyIdx+1)%Math.min(6, policyItems.length);
+  renderPolicyTop(policyItems[policyIdx], policyItems.slice(1,6)); },6000);
+
+document.getElementById('btn-more').addEventListener('click',renderPolicyList);
+document.getElementById('toTop').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+/* init */
+(async function init(){
+  try{ await Promise.all([loadToday(), loadPolitics(), loadPolicy()]); }catch(e){console.error(e)}
+  setInterval(loadToday,   180000);
+  setInterval(loadPolitics,180000);
+  setInterval(loadPolicy,  240000);
+})();
+function classForSummary(text){
+  const plain = String(text||'').replace(/<[^>]+>/g,'').trim();
+  return plain.length < 120 ? 'short' : 'justify'; // ngắn thì left, dài thì justify
+}
+
+</script>
+</body>
+</html>
