@@ -143,6 +143,107 @@ a{color:inherit;text-decoration:none} a:hover{color:#dc2626}
 .p-desc {
   max-width: 62ch; /* ~62 ký tự/line => dễ đọc, ít bị giãn khoảng trắng */
 }
+/* === Utilities: line-clamp cho tiêu đề/mô tả === */
+.clamp-1,.clamp-2,.clamp-3{
+  display:-webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-1{ line-clamp:1; -webkit-line-clamp:1; }
+.clamp-2{ line-clamp:2; -webkit-line-clamp:2; }
+.clamp-3{ line-clamp:3; -webkit-line-clamp:3; }
+/* Tile dưới hero: tiêu đề 2 dòng */
+.tile h4, .tile h4 a{
+  display:-webkit-box; -webkit-box-orient:vertical; line-clamp:2; -webkit-line-clamp:2; overflow:hidden;
+  text-align:left; text-wrap:balance; letter-spacing:normal; word-spacing:normal;
+}
+
+/* Danh sách (policy-list): tiêu đề 2 dòng + mô tả 3 dòng */
+.pl-item h4, .pl-item h4 a{
+  display:-webkit-box; -webkit-box-orient:vertical; line-clamp:2; -webkit-line-clamp:2; overflow:hidden;
+}
+.pl-item .desc{
+  display:-webkit-box; -webkit-box-orient:vertical; line-clamp:3; -webkit-line-clamp:3; overflow:hidden;
+}
+
+/* Giữ chiều cao card đồng đều, tránh nhảy khối khi title dài */
+.tile .pad{min-height:86px}           /* chỉnh 78–100px tuỳ anh */
+.pl-item{min-height:146px}            /* giúp 2 cột cân đẹp */
+/* Tối ưu đọc cho khối Chính sách mới */
+.p-title a{display:block}
+.p-title{font-size:22px; line-height:1.35; letter-spacing:normal; word-spacing:normal; text-wrap:balance;}
+@media (min-width:1025px){ .p-title{font-size:26px} }
+
+/* mô tả – giữ 3 dòng là tối đa */
+.p-desc{color:#374151; line-height:1.6;}
+
+/* Hot list bên phải – giới hạn 2 dòng/1 tin */
+.hot-title{display:-webkit-box; -webkit-box-orient:vertical; line-clamp:2; -webkit-line-clamp:2; overflow:hidden}
+/* Không bao giờ justify tiêu đề */
+.p-title.justify, .p-title {
+  text-align: left !important;
+  text-justify: auto !important;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-wrap: balance;      /* chia dòng đẹp */
+  overflow-wrap: anywhere; /* đề phòng chuỗi dài */
+}
+/* Mặc định (desktop): ẩn nút 3 gạch */
+.m-toggle{
+  display:none !important;
+  background:transparent;
+  border:0;
+  color:#fff;
+  font-size:28px;
+  line-height:1;
+}
+
+@media (max-width:1024px){
+  .nav a:not(.brand), .nav .has-dropdown{display:none !important}
+  .m-toggle{display:block; margin-left:auto; background:0 0; border:0; color:#fff; font-size:28px}
+
+  .m-drawer{
+    position:fixed; inset:0 auto 0 0; width:86vw; max-width:420px; transform:translateX(-100%);
+    background:linear-gradient(180deg,#7f1d1d,#b91c1c 55%,#9d1414); color:#fff; z-index:120;
+    transition:transform .25s ease; box-shadow:4px 0 30px rgba(0,0,0,.25);
+  }
+  .m-head{display:flex; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.12)}
+  .m-home{font-size:22px; text-decoration:none}
+  .m-brand{font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .m-close{margin-left:auto; background:0 0; border:0; color:#fff; font-size:28px; cursor:pointer}
+
+  .m-menu{padding:8px 8px 18px}
+  .m-item{display:block; color:#fff; padding:14px 10px; font-weight:600; border-bottom:1px solid rgba(255,255,255,.08)}
+  .m-drop .caret{float:right}
+  .m-sub{display:flex; flex-direction:column; gap:6px; padding:10px 10px 12px}
+  .m-sub a{padding:10px 10px 8px 18px; border-bottom:1px dashed rgba(255,255,255,.12)}
+
+  .m-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(2px);
+    z-index:110; opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+
+  /* States */
+  body.menu-open .m-drawer{transform:translateX(0)}
+  body.menu-open .m-backdrop{opacity:1; pointer-events:auto}
+  body.no-scroll{overflow:hidden}
+}
+/* === MOBILE ONLY === */
+@media (max-width:1024px){
+  /* Ảnh feature trong TIN CHÍNH TRỊ tự co theo màn hình */
+  .p-feature .hero{
+    width:100%;
+    height:56vw;          /* tỉ lệ ~16:9 theo bề rộng màn hình */
+    max-height:260px;     /* trần cho máy lớn */
+    min-height:180px;     /* đáy cho máy nhỏ */
+    object-fit:cover;     /* cắt tràn/hợp lý, không bị “dài dọc” */
+  }
+}
+@media (max-width:1024px){
+  /* Ẩn 3 tile dưới hero trong CHÍNH SÁCH MỚI */
+  .p-mid{ display:none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -163,7 +264,32 @@ a{color:inherit;text-decoration:none} a:hover{color:#dc2626}
           </div>
         </div>
     <div class="sp"></div>
+    <button class="m-toggle" aria-label="Mở menu">☰</button>
   </nav>
+
+<!-- MOBILE DRAWER (mobile-only) -->
+<aside id="mDrawer" class="m-drawer" aria-hidden="true" role="dialog" aria-label="Menu">
+  <div class="m-head">
+    <a class="m-home" href="index.html" aria-label="Trang chủ" title="Trang chủ">🏠</a>
+    <span class="m-brand">BỘ CHQS TỈNH BẮC NINH</span>
+    <button class="m-close" aria-label="Đóng menu">✕</button>
+  </div>
+
+  <nav class="m-menu" role="navigation">
+    <a class="m-item" href="index.html">Trang chủ</a>
+    <a class="m-item" href="tintuc24.html" aria-current="page">Tin tức</a>
+    <a class="m-item" href="Hoctap.html">Học tập</a>
+
+    <button class="m-item m-drop" aria-expanded="false" aria-controls="m-exam">Làm bài kiểm tra <span class="caret">▾</span></button>
+    <div id="m-exam" class="m-sub" hidden>
+      <a href="exam.html">Kiểm tra nhận thức</a>
+      <a href="practice.html">Ôn trắc nghiệm</a>
+      <a href="quiz.html">Thi thử</a>
+    </div>
+  </nav>
+</aside>
+<div class="m-backdrop" hidden></div>
+
 </header>
 
 <div class="container">
@@ -202,7 +328,7 @@ a{color:inherit;text-decoration:none} a:hover{color:#dc2626}
         </div>
       <div class="p-detail card">
         <a id="policy-detail-link" class="block-link" href="#" target="_blank" rel="noopener"></a>
-        <h3 id="policy-title" class="p-title clamp-2 justify"></h3>
+        <h3 id="policy-title" class="p-title clamp-2"></h3>
         <div id="policy-desc" class="p-desc clamp-3 justify"></div>
         <div id="policy-meta" class="p-meta"></div>
         </div>
@@ -349,7 +475,9 @@ function renderPolicyMid(arr){
       <a href="${it.link}" target="_blank" rel="noopener">
         <img src="${it.image||FALLBACK}" onerror="this.src='${FALLBACK}'" alt="">
       </a>
-      <div class="pad"><h4><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></h4></div>
+      <div class="pad">
+        <h4 class="clamp-2"><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></h4>
+      </div>
     </article>`).join('');
 }
 function renderPolicyList(){
@@ -362,8 +490,8 @@ function renderPolicyList(){
         <img src="${it.image||FALLBACK}" onerror="this.src='${FALLBACK}'" alt="">
       </a>
       <div>
-        <h4><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></h4>
-        ${it.summary?`<div class="desc">${it.summary}</div>`:''}
+        <h4 class="clamp-2"><a href="${it.link}" target="_blank" rel="noopener">${it.title}</a></h4>
+        ${it.summary?`<div class="desc clamp-3">${it.summary}</div>`:''}
       </div>
     </article>`).join(''));
   if(policyOffset>=policyItems.length) document.getElementById('btn-more').classList.add('hide');
@@ -394,7 +522,52 @@ function classForSummary(text){
   const plain = String(text||'').replace(/<[^>]+>/g,'').trim();
   return plain.length < 120 ? 'short' : 'justify'; // ngắn thì left, dài thì justify
 }
+(function(){
+  const drawer   = document.getElementById('mDrawer');
+  const backdrop = document.querySelector('.m-backdrop');
+  const openBtn  = document.querySelector('.m-toggle');     // nút 3 gạch trong header
+  const closeBtn = drawer?.querySelector('.m-close');
 
+  const focusables = 'a,button,[tabindex]:not([tabindex="-1"])';
+  let lastFocus = null;
+
+  function open(){
+    lastFocus = document.activeElement;
+    document.body.classList.add('menu-open','no-scroll');
+    drawer?.setAttribute('aria-hidden','false');
+    backdrop?.hidden = false;
+    (drawer?.querySelector(focusables))?.focus();
+  }
+  function close(){
+    document.body.classList.remove('menu-open','no-scroll');
+    drawer?.setAttribute('aria-hidden','true');
+    backdrop?.hidden = true;
+    lastFocus?.focus?.();
+  }
+
+  openBtn?.addEventListener('click', open);
+  closeBtn?.addEventListener('click', close);
+  backdrop?.addEventListener('click', close);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
+
+  // Accordion: event delegation cho tất cả .m-drop
+  drawer?.addEventListener('click', e=>{
+    const btn = e.target.closest('.m-drop');
+    if(!btn) return;
+    const id = btn.getAttribute('aria-controls') || btn.dataset.target?.replace('#','');
+    const panel = id ? document.getElementById(id) : null;
+    if(!panel) return;
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    panel.hidden = expanded;
+  });
+
+  // Đóng khi bấm link trong menu
+  drawer?.addEventListener('click', e=>{
+    const a = e.target.closest('a');
+    if(a) close();
+  });
+})();
 </script>
 </body>
 </html>
